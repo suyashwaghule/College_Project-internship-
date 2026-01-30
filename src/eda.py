@@ -8,24 +8,24 @@ print(df.head())
 print(df.shape)
 
 
-# Aggregate district data to state-year level
-state_year_df = (
-    df.groupby(["state", "year"])["total_crimes"]
-      .sum()
-      .reset_index()
-)
-
-print(state_year_df.head())
-
-
 # Choose one state to visualize
-sample_state = "MAHARASHTRA"   # change if needed
+sample_state = "Andhra Pradesh"   # change if needed
 
-state_data = state_year_df[state_year_df["state"] == sample_state]
+# Filter data for the selected state
+state_data = df[df["state"] == sample_state]
 
-plt.figure()
-plt.plot(state_data["year"], state_data["total_crimes"])
-plt.xlabel("Year")
+# Sort by total_crimes to make the chart readable
+state_data = state_data.sort_values("total_crimes", ascending=False)
+
+# Plot a bar chart of crimes by district
+plt.figure(figsize=(12, 6))  # Make figure larger for district names
+plt.bar(state_data["district"], state_data["total_crimes"], color='skyblue')
+plt.xlabel("District")
 plt.ylabel("Total IPC Crimes")
-plt.title(f"Crime Trend in {sample_state}")
+plt.title(f"District-wise Crime Distribution in {sample_state} (2013)")
+plt.xticks(rotation=90)  # Rotate x-axis labels to avoid overlap
+plt.tight_layout()       # Adjust layout to prevent clipping
 plt.show()
+
+print(f"Plotting done for {sample_state}")
+print("Available states:", df["state"].unique())
